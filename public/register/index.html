@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pacientes - Clínica Oftalmológica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8 font-sans">
+
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+    
+    <!-- Título principal -->
+    <h1 class="text-3xl font-bold text-blue-700 mb-6 text-center">Gestión de Pacientes</h1>
+
+    <!-- Formulario -->
+    <div class="mb-8">
+      <h2 id="form-title" class="text-xl font-semibold mb-4 text-gray-700">Nuevo Paciente</h2>
+      <!-- Mensaje de alerta -->
+<div id="alert" class="mb-4 text-center text-red-600 font-semibold"></div>
+
+      <form id="form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input name="firstName" placeholder="Nombre" required class="p-2 border border-gray-300 rounded">
+        <input name="lastName" placeholder="Apellido" required class="p-2 border border-gray-300 rounded">
+        <input name="dni" placeholder="DNI" required class="p-2 border border-gray-300 rounded">
+        <button type="submit" id="submit-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition md:col-span-1">Guardar</button>
+        <button type="button" id="cancel-btn" style="display:none" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 transition md:col-span-1">Cancelar</button>
+      </form>
+    </div>
+
+    <!-- Tabla de pacientes -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 text-sm" id="tbl">
+        <thead class="bg-blue-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 border">DNI</th>
+            <th class="px-4 py-2 border">Nombre</th>
+            <th class="px-4 py-2 border">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-center"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="app.js"></script>
+     <!-- Botón para regresar al menú -->
+<div class="mb-6">
+<button onclick="window.location.href='/'" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded flex items-center gap-2 transition">
+  <!-- Icono de flecha -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  Volver al Menú Principal
+</button>
+</body>
+</html>

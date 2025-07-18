@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Historial Clínico - Clínica Oftalmológica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-sky-50 min-h-screen font-sans flex items-center justify-center p-6">
+
+
+  <div class="w-full max-w-5xl bg-white p-8 rounded-xl shadow-lg">
+<div class="flex justify-center mb-2">
+   <!-- Ícono de ojo -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 4.5C7.5 4.5 3.7 8 2 12c1.7 4 5.5 7.5 10 7.5s8.3-3.5 10-7.5c-1.7-4-5.5-7.5-10-7.5zm0 13a5.5 5.5 0 110-11 5.5 5.5 0 010 11zm0-9a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/>
+  </svg>
+</div>
+
+    <!-- Encabezado -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-blue-700">Historial de Recetas Medicas del Paciente</h1>
+      <p class="text-gray-600">Seleccione un paciente para ver su historial de recetas medicas  completa</p>
+    </div>
+
+
+    <!-- Buscador -->
+<div class="mb-6">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Buscar por DNI, nombre o apellido..."
+    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+
+  />
+</div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto">
+     
+
+      <table class="min-w-full bg-white border border-gray-300 rounded-md shadow" id="tbl">
+        <thead class="bg-blue-100 text-gray-800">
+          <tr>
+            <th class="px-6 py-3 border-b text-left">DNI</th>
+            <th class="px-6 py-3 border-b text-left">Nombre</th>
+            <th class="px-6 py-3 border-b text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-700 text-sm"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Script para cargar pacientes -->
+ <script>
+  const API = '/api/patients';
+  const tbody = document.querySelector('#tbl tbody');
+  let allPatients = [];
+
+  async function loadPatients() {
+    try {
+      const res = await fetch(API);
+      allPatients = await res.json();
+      renderTable(allPatients);
+    } catch (error) {
+      console.error('Error al cargar pacientes:', error);
+      tbody.innerHTML = `<tr><td colspan="3" class="text-center text-red-500 py-4">Error al cargar datos</td></tr>`;
+    }
+  }
+
+ function renderTable(patients) {
+  tbody.innerHTML = patients.map(p => `
+ <tr class="hover:bg-blue-50 transition duration-200 cursor-pointer">
+
+  <!-- DNI con ícono -->
+  <td class="px-6 py-4 border-b">
+    <div class="flex items-center gap-2">
+            <!-- Ícono tipo DNI azul -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sky-600" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16a2 2 0 002-2V6c0-1.1-.9-2-2-2zm-9 13H5v-1c0-1.7 3-2.5 3.5-2.5S14 15.3 14 16v1h-3zm-3.5-3.5C6.7 13.5 6 12.8 6 12s.7-1.5 1.5-1.5S9 11.2 9 12s-.7 1.5-1.5 1.5zM19 13h-5v-1h5v1zm0-3h-5V9h5v1z"/>
+        </svg>
+
+      ${p.dni}
+    </div>
+  </td>
+      <!-- Nombre con ícono -->
+  <td class="px-6 py-4 border-b">
+    <div class="flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2a5 5 0 110 10 5 5 0 010-10zm0 12c-4.4 0-8 1.8-8 4v2h16v-2c0-2.2-3.6-4-8-4z"/>
+      </svg>
+      ${p.firstName} ${p.lastName}
+    </div>
+  </td>
+      <td class="px-6 py-4 border-b text-center">
+        <button onclick="verHistorial('${p._id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 018 0v2m-8 0H5a2 2 0 01-2-2V7a2 2 0 012-2h3m0 0h4m-4 0v2a1 1 0 001 1h3a1 1 0 001-1V5" />
+          </svg>
+          Ver Historial
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+
+
+  document.getElementById('searchInput').addEventListener('input', function () {
+    const searchText = this.value.toLowerCase();
+    const filtered = allPatients.filter(p =>
+      p.dni.toLowerCase().includes(searchText) ||
+      p.firstName.toLowerCase().includes(searchText) ||
+      p.lastName.toLowerCase().includes(searchText)
+    );
+    renderTable(filtered);
+  });
+
+  function verHistorial(id) {
+    window.location.href = `history.html?id=${id}`;
+  }
+
+  loadPatients();
+</script>
+
+
+  <script src="app-historial.js"></script>
+
+
+
+  <!-- Botón para regresar al menú -->
+<div class="mb-6">
+<button onclick="window.location.href='/'" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded flex items-center gap-2 transition">
+  <!-- Icono de flecha -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  Volver al Menú Principal
+</button>
+
+</div>
+</body>
+</html>

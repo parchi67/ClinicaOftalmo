@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Historia Clínica</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+ body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: linear-gradient(135deg, #e8f6f9, #ffffff);
+  background-attachment: fixed;
+}
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    #main-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      flex: 1;
+      min-width: 300px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 8px;
+      resize: vertical;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button i {
+      margin-right: 5px;
+    }
+
+    #search-date {
+      padding: 8px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    ul#history-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul#history-list li {
+      background-color: #ecf0f1;
+      margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    #patient-info p {
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Historia de Recetas Medicas del Paciente</h1>
+
+  <div id="patient-info" class="card">
+    <p><strong>DNI:</strong> <span id="dni"></span></p>
+    <p><strong>Nombre:</strong> <span id="name"></span></p>
+  </div>
+
+  <div id="main-container">
+
+    <!-- 🧾 Historial -->
+    <div class="card">
+      <h2><i class="fas fa-file-medical-alt"></i> Recetario Médico</h2>
+      <input type="text" id="search-date" placeholder="Buscar por fecha (Ej: 13/6/2025)" />
+      <ul id="history-list"></ul>
+    </div>
+
+    <!-- ➕ Formulario -->
+    <div class="card">
+      <h2><i class="fas fa-notes-medical"></i> Agregar Nuevo Recetario Médico</h2>
+      <form id="history-form">
+        <input type="hidden" id="entry-id">
+
+        <label for="diagnosis">Diagnóstico:</label>
+        <textarea id="diagnosis" name="diagnosis" required rows="3"></textarea>
+
+        <label for="treatment">Tratamiento:</label>
+        <textarea id="treatment" name="treatment" required rows="3"></textarea>
+
+        <label for="notes">Nota:</label>
+        <textarea id="notes" name="notes" rows="3"></textarea>
+
+        <button type="submit"><i class="fas fa-save"></i> Agregar / Actualizar</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- PDF oculto para impresión o descarga -->
+  <div id="pdf-content" style="display: none; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="text-align: center;">
+     <img src="gofd.png" alt="Logo Clínica Oftalmológica" width="120" style="margin-bottom: 10px;" />
+
+      <h2 style="margin: 0;">Comprobante de Historia Clínica</h2>
+      <p style="margin: 0;">Clínica Oftalmológica</p>
+    </div>
+
+    <hr>
+
+    <p><strong>Nombre del Paciente:</strong> <span id="pdf-name"></span></p>
+    <p><strong>DNI:</strong> <span id="pdf-dni"></span></p>
+
+    <table border="1" cellspacing="0" cellpadding="5" width="100%" style="border-collapse: collapse; margin-top: 15px;">
+      <thead style="background-color: #f0f0f0;">
+        <tr>
+          <th>Fecha</th>
+          <th>Diagnóstico</th>
+          <th>Tratamiento</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-history-rows"></tbody>
+    </table>
+
+    <div style="margin-top: 50px; text-align: right;">
+      <p>__________________________</p>
+      <p><em>Firma del profesional</em></p>
+    </div>
+  </div>
+<script>
+function exportarPDF() {
+  const pdfElement = document.getElementById('pdf-content');
+  
+  // Mostrar temporalmente el contenido
+  pdfElement.style.display = 'block';
+
+  const opt = {
+    margin: 0.5,
+    filename: 'recetario-medico.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(pdfElement).save().then(() => {
+    // Volver a ocultarlo
+    pdfElement.style.display = 'none';
+  });
+}
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="app-history.js"></script>
+    <!-- Botón para regresar al menú -->
+<div class="mb-6">
+<button onclick="window.location.href='/'" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded flex items-center gap-2 transition">
+  <!-- Icono de flecha -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  Volver al Menú Principal
+</button>
+</body>
+</html>

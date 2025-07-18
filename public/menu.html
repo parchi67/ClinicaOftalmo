@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Menú Principal - Clínica Oftalmológica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: url('gofd.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .overlay {
+      background-color: rgba(123, 36, 36, 0.5); /* oscurece un poco el fondo para mejor contraste */
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center text-white font-sans overlay">
+
+  <!-- Logo -->
+  <img src="logo.png" class="h-20 mb-4" alt="Logo Oftalmología" />
+
+  <!-- Título -->
+  <h1 class="text-4xl font-bold mb-6 text-white text-center">Clínica Oftalmológica</h1>
+
+  <!-- Imagen del doctor -->
+  <img src="d.jpg" alt="Doctor" class="h-48 mb-6 rounded-lg shadow-lg border-2 border-white" />
+
+  <!-- Botones -->
+  <div class="space-x-4">
+    <button onclick="location.href='/register/index.html'" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition">
+      Registrar Paciente
+    </button>
+    <button onclick="location.href='/history/historial.html'" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition">
+      Historial Clínico
+    </button>
+  </div>
+
+</body>
+</html>
+
+
